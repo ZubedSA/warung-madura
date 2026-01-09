@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('order_number')->unique();
             $table->enum('status', ['draft', 'dikirim', 'selesai'])->default('draft');
-            $table->text('notes')->nullable();
+            $table->text('notes')->default('');
             $table->timestamp('sent_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();

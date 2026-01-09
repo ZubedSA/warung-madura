@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->string('name');
             $table->enum('stock_status', ['banyak', 'cukup', 'sedikit', 'kosong'])->default('cukup');
             $table->string('unit')->default('pcs');
-            $table->string('supplier_name')->nullable();
-            $table->string('supplier_phone')->nullable();
+            $table->string('supplier_name')->default('');
+            $table->string('supplier_phone')->default('');
             $table->timestamps();
         });
     }

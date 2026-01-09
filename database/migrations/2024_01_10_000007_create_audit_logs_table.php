@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('action');
             $table->string('description');
-            $table->json('data')->nullable();
+            $table->json('data')->default('{}');
             $table->timestamp('created_at')->useCurrent();
         });
     }
