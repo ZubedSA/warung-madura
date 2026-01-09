@@ -10,33 +10,23 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'default' => (isset($_SERVER['VERCEL']) || env('VERCEL')) ? 'libsql' : env('DB_CONNECTION', 'sqlite'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Database Connections
-    |--------------------------------------------------------------------------
-    |
-    */
+    'default' => env('DB_CONNECTION', 'libsql'),
 
     'connections' => [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => database_path('database.sqlite'),
+            'url' => env('DATABASE_URL'),
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
-            'synchronous' => null,
         ],
 
         'libsql' => [
             'driver' => 'libsql',
-            'url' => env('DB_URL', 'libsql://turso-db-create-warung-madura-zubedsa.aws-ap-northeast-1.turso.io'),
-            'authToken' => env('DB_AUTH_TOKEN', 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3Njc5ODk2MDIsImlkIjoiOTVlNWM3MGUtZTU4YS00MDFjLWI5Y2MtNWM3ZWMxNWZkZTUwIiwicmlkIjoiZjM1NTFhNWEtNjg2OS00MDc1LThhYTAtMjEyYjI5MDBhMDkzIn0.CoBmITRsgBq1jWm6WfFLf3AaEwokwPScM6cNbLZOgwZ7_GuuT7S7Q7r0D95e2oWxe6VrAPC3hsLRM-hsY51sAQ'),
-            'database' => env('DB_DATABASE', 'warung_madura'),
-            'dbname' => env('DB_DATABASE', 'warung_madura'),
+            'url' => 'https://turso-db-create-warung-madura-zubedsa.aws-ap-northeast-1.turso.io',
+            'authToken' => 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3Njc5ODk2MDIsImlkIjoiOTVlNWM3MGUtZTU4YS00MDFjLWI5Y2MtNWM3ZWMxNWZkZTUwIiwicmlkIjoiZjM1NTFhNWEtNjg2OS00MDc1LThhYTAtMjEyYjI5MDBhMDkzIn0.CoBmITRsgBq1jWm6WfFLf3AaEwokwPScM6cNbLZOgwZ7_GuuT7S7Q7r0D95e2oWxe6VrAPC3hsLRM-hsY51sAQ',
+            'database' => 'warung_madura',
             'prefix' => '',
         ],
 
