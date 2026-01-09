@@ -70,6 +70,20 @@ Route::get('/force-seed', function () {
     }
 });
 
+// Force Migrate Fresh Route (Temporary for Vercel Setup)
+Route::get('/force-migrate-fresh', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--database' => 'libsql',
+            '--seed' => true
+        ]);
+        return 'Migration Fresh & Seed successful: ' . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Throwable $e) {
+        return 'Migration Fresh failed: ' . $e->getMessage();
+    }
+});
+
 
 /*
 |--------------------------------------------------------------------------
