@@ -12,6 +12,18 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 
+// Debug Route
+Route::get('/debug-db', function () {
+    return [
+        'default_connection' => config('database.default'),
+        'libsql_config' => config('database.connections.libsql'),
+        'env_db_connection' => env('DB_CONNECTION'),
+        'env_db_url_exists' => !empty(env('DB_URL')),
+        'env_db_token_exists' => !empty(env('DB_AUTH_TOKEN')),
+    ];
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,7 +49,8 @@ Route::middleware('auth')->group(function () {
     // ==========================================
     Route::middleware('role:penjaga')->prefix('penjaga')->name('penjaga.')->group(function () {
         Route::get('/', function () {
-            return redirect()->route('penjaga.stok.index'); });
+            return redirect()->route('penjaga.stok.index');
+        });
         // Stock Management
         Route::get('/stok', [ProductController::class, 'index'])->name('stok.index');
         Route::get('/stok/status/{status}', [ProductController::class, 'byStatus'])->name('stok.status');
@@ -78,7 +91,8 @@ Route::middleware('auth')->group(function () {
     // ==========================================
     Route::middleware('role:pemilik')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', function () {
-            return redirect()->route('admin.laporan.index'); });
+            return redirect()->route('admin.laporan.index');
+        });
         // Dashboard already handled above
 
         // Reports

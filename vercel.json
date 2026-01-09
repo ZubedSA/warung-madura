@@ -23,6 +23,7 @@
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "false",
+        "DB_CONNECTION": "libsql",
         "APP_URL": "https://${VERCEL_URL}",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
