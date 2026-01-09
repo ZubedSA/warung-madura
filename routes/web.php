@@ -12,75 +12,33 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 
-// Debug Route
+// Setup & Diagnostic Routes
 Route::get('/debug-db', function () {
     try {
         $connection = config('database.default');
-        $tables = \Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='table'");
-
+        $tables = \Illuminate\Support\Facades\DB::connection($connection)->select("SELECT name FROM sqlite_master WHERE type='table'");
         return [
             'status' => 'success',
             'tables' => array_column($tables, 'name'),
             'connection' => $connection,
             'driver' => config("database.connections.$connection.driver"),
-            'url_masked' => substr(config("database.connections.$connection.url"), 0, 20) . '...',
         ];
     } catch (\Throwable $e) {
-        return [
-            'status' => 'error',
-            'message' => $e->getMessage(),
-            'class' => get_class($e),
-        ];
+        return ['status' => 'error', 'message' => $e->getMessage()];
     }
 });
 
-// Force Migrate Install (Ensure migrations table exists)
-Route::get('/migrate-install', function () {
+Route::get('/rescue', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate:install', ['--database' => 'libsql']);
-        return 'Migration install successful: ' . \Illuminate\Support\Facades\Artisan::output();
-    } catch (\Throwable $e) {
-        return 'Migration install failed: ' . $e->getMessage();
-    }
-});
-
-// Force Migration Route (Temporary for Vercel Setup)
-Route::get('/force-migrate', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--force' => true,
-            '--database' => 'libsql'
-        ]);
-        return 'Migration successful: ' . \Illuminate\Support\Facades\Artisan::output();
-    } catch (\Throwable $e) {
-        return 'Migration failed: ' . $e->getMessage();
-    }
-});
-
-// Force Seed Route (Temporary for Vercel Setup)
-Route::get('/force-seed', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('db:seed', [
-            '--force' => true,
-            '--database' => 'libsql'
-        ]);
-        return 'Seeding successful: ' . \Illuminate\Support\Facades\Artisan::output();
-    } catch (\Throwable $e) {
-        return 'Seeding failed: ' . $e->getMessage();
-    }
-});
-
-// Force Migrate Fresh Route (Temporary for Vercel Setup)
-Route::get('/force-migrate-fresh', function () {
-    try {
+        // Force migration and seeding on Turso
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
             '--force' => true,
             '--database' => 'libsql',
             '--seed' => true
         ]);
-        return 'Migration Fresh & Seed successful: ' . \Illuminate\Support\Facades\Artisan::output();
+        return 'Warung Madura System Rescued! Output: ' . \Illuminate\Support\Facades\Artisan::output();
     } catch (\Throwable $e) {
-        return 'Migration Fresh failed: ' . $e->getMessage();
+        return 'Rescue Failed: ' . $e->getMessage();
     }
 });
 
