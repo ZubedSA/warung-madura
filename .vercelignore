@@ -1,0 +1,14 @@
+/node_modules
+/tests
+/storage/*.key
+/vendor
+/.git
+/.github
+/bin
+/docs
+phpunit.xml
+README.md
+.env.example
+.env.backup
+.gitattributes
+.gitignore
