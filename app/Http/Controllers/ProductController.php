@@ -17,11 +17,11 @@ class ProductController extends Controller
     public function index()
     {
         try {
-            // TEST 1: Simple Select
-            $testAll = Category::limit(1)->get();
+            // TEST 1: Select only Non-Null columns
+            $testNonNull = Category::select('id', 'name')->limit(1)->get();
 
-            // TEST 2: Simple Count
-            $testCount = Category::count();
+            // TEST 2: Select all (likely contains nullable cols like icon)
+            $testAll = Category::limit(1)->get();
 
             $categories = Category::withCount('products')
                 ->orderBy('sort_order')
@@ -37,12 +37,11 @@ class ProductController extends Controller
             return view('penjaga.stock.index', compact('categories', 'stockSummary'));
         } catch (\Throwable $e) {
             dd([
+                'test_non_null_success' => isset($testNonNull),
                 'test_all_success' => isset($testAll),
-                'test_count_success' => isset($testCount),
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10))
             ]);
         }
     }
