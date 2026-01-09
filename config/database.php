@@ -10,7 +10,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'default' => (isset($_SERVER['VERCEL']) || env('VERCEL') || env('APP_ENV') === 'production') ? 'libsql' : env('DB_CONNECTION', 'sqlite'),
+    'default' => 'libsql',
 
     /*
     |--------------------------------------------------------------------------
