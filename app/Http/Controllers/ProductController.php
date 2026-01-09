@@ -16,34 +16,18 @@ class ProductController extends Controller
      */
     public function index()
     {
-        try {
-            // TEST 1: Select only Non-Null columns
-            $testNonNull = Category::select('id', 'name')->limit(1)->get();
+        $categories = Category::withCount('products')
+            ->orderBy('sort_order')
+            ->get();
 
-            // TEST 2: Select all (likely contains nullable cols like icon)
-            $testAll = Category::limit(1)->get();
+        $stockSummary = [
+            'banyak' => Product::where('stock_status', 'banyak')->count(),
+            'cukup' => Product::where('stock_status', 'cukup')->count(),
+            'sedikit' => Product::where('stock_status', 'sedikit')->count(),
+            'kosong' => Product::where('stock_status', 'kosong')->count(),
+        ];
 
-            $categories = Category::withCount('products')
-                ->orderBy('sort_order')
-                ->get();
-
-            $stockSummary = [
-                'banyak' => Product::where('stock_status', 'banyak')->count(),
-                'cukup' => Product::where('stock_status', 'cukup')->count(),
-                'sedikit' => Product::where('stock_status', 'sedikit')->count(),
-                'kosong' => Product::where('stock_status', 'kosong')->count(),
-            ];
-
-            return view('penjaga.stock.index', compact('categories', 'stockSummary'));
-        } catch (\Throwable $e) {
-            dd([
-                'test_non_null_success' => isset($testNonNull),
-                'test_all_success' => isset($testAll),
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
-        }
+        return view('penjaga.stock.index', compact('categories', 'stockSummary'));
     }
 
     /**
