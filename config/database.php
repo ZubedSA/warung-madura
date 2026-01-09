@@ -36,6 +36,7 @@ return [
             'url' => env('DB_URL', 'libsql://...'), // Format: libsql://dbname-org.turso.io
             'authToken' => env('DB_AUTH_TOKEN', ''),
             'database' => env('DB_DATABASE', 'warung_madura'),
+            'dbname' => env('DB_DATABASE', 'warung_madura'),
             'prefix' => '',
         ],
 
