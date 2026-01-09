@@ -28,5 +28,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Carbon locale
         \Carbon\Carbon::setLocale('id');
+
+        if ($this->app->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
     }
 }
