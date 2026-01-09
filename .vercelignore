@@ -12,3 +12,5 @@ README.md
 .env.backup
 .gitattributes
 .gitignore
+/bootstrap/cache
+
