@@ -14,9 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone')->default('');
             $table->enum('role', ['penjaga', 'pemilik'])->default('penjaga');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->default('2000-01-01 00:00:00');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

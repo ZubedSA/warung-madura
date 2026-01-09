@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->string('quantity_text');
-            $table->enum('stock_after_arrival', ['banyak', 'cukup', 'sedikit', 'kosong'])->nullable();
+            $table->enum('stock_after_arrival', ['banyak', 'cukup', 'sedikit', 'kosong'])->default('cukup');
             $table->timestamps();
         });
     }

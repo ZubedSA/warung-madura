@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->string('order_number')->unique();
             $table->enum('status', ['draft', 'dikirim', 'selesai'])->default('draft');
             $table->text('notes')->default('');
-            $table->timestamp('sent_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
+            $table->timestamp('sent_at')->useCurrent();
+            $table->timestamp('completed_at')->useCurrent();
             $table->timestamps();
         });
     }

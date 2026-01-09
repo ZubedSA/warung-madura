@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->date('date');
             $table->decimal('amount', 15, 2);
             $table->enum('category', ['belanja_barang', 'listrik', 'air', 'lainnya'])->default('lainnya');
-            $table->text('notes')->nullable();
+            $table->text('notes')->default('');
             $table->timestamps();
         });
     }
