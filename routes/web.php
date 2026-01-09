@@ -30,15 +30,22 @@ Route::get('/debug-db', function () {
 
 Route::get('/rescue', function () {
     try {
+        // Clear all caches to ensure hardcoded config is used
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+
         // Force migration and seeding on Turso
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
             '--force' => true,
             '--database' => 'libsql',
             '--seed' => true
         ]);
-        return 'Warung Madura System Rescued! Output: ' . \Illuminate\Support\Facades\Artisan::output();
+
+        return '<h1>System Rescued!</h1><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre><br><a href="/">Go to Home</a>';
     } catch (\Throwable $e) {
-        return 'Rescue Failed: ' . $e->getMessage();
+        return '<h1>Rescue Failed!</h1><p>' . $e->getMessage() . '</p><pre>' . $e->getTraceAsString() . '</pre>';
     }
 });
 
