@@ -34,10 +34,23 @@ Route::get('/debug-db', function () {
     }
 });
 
+// Force Migrate Install (Ensure migrations table exists)
+Route::get('/migrate-install', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:install', ['--database' => 'libsql']);
+        return 'Migration install successful: ' . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Throwable $e) {
+        return 'Migration install failed: ' . $e->getMessage();
+    }
+});
+
 // Force Migration Route (Temporary for Vercel Setup)
 Route::get('/force-migrate', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--force' => true,
+            '--database' => 'libsql'
+        ]);
         return 'Migration successful: ' . \Illuminate\Support\Facades\Artisan::output();
     } catch (\Throwable $e) {
         return 'Migration failed: ' . $e->getMessage();
@@ -47,7 +60,10 @@ Route::get('/force-migrate', function () {
 // Force Seed Route (Temporary for Vercel Setup)
 Route::get('/force-seed', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', [
+            '--force' => true,
+            '--database' => 'libsql'
+        ]);
         return 'Seeding successful: ' . \Illuminate\Support\Facades\Artisan::output();
     } catch (\Throwable $e) {
         return 'Seeding failed: ' . $e->getMessage();
