@@ -16,21 +16,20 @@ use App\Http\Controllers\UserController;
 Route::get('/debug-db', function () {
     try {
         $connection = config('database.default');
-        $queryTest = \Illuminate\Support\Facades\DB::table('users')->count();
+        $tables = \Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='table'");
 
         return [
             'status' => 'success',
-            'user_count' => $queryTest,
+            'tables' => array_column($tables, 'name'),
             'connection' => $connection,
             'driver' => config("database.connections.$connection.driver"),
+            'url_start' => substr(config("database.connections.$connection.url"), 0, 15),
         ];
     } catch (\Throwable $e) {
         return [
             'status' => 'error',
             'message' => $e->getMessage(),
             'class' => get_class($e),
-            'line' => $e->getLine(),
-            'file' => $e->getFile(),
             'config_default' => config('database.default'),
             'env_db_connection' => env('DB_CONNECTION'),
         ];
