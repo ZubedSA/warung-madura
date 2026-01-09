@@ -14,19 +14,27 @@ use App\Http\Controllers\UserController;
 
 // Debug Route
 Route::get('/debug-db', function () {
-    return [
-        'is_vercel_env_set' => isset($_SERVER['VERCEL']),
-        'server_keys' => array_keys($_SERVER),
-        'env_keys' => array_keys($_ENV ?? []),
-        'default_connection' => config('database.default'),
-        'env_db_connection' => env('DB_CONNECTION'),
-        'config_db_connection' => config('database.default'),
-        'libsql_config' => [
-            'url_exists' => !empty(config('database.connections.libsql.url')),
-            'auth_exists' => !empty(config('database.connections.libsql.authToken')),
-            'url_value_starts' => substr(config('database.connections.libsql.url'), 0, 10),
-        ],
-    ];
+    try {
+        $connection = config('database.default');
+        $queryTest = \Illuminate\Support\Facades\DB::table('users')->count();
+
+        return [
+            'status' => 'success',
+            'user_count' => $queryTest,
+            'connection' => $connection,
+            'driver' => config("database.connections.$connection.driver"),
+        ];
+    } catch (\Throwable $e) {
+        return [
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'class' => get_class($e),
+            'line' => $e->getLine(),
+            'file' => $e->getFile(),
+            'config_default' => config('database.default'),
+            'env_db_connection' => env('DB_CONNECTION'),
+        ];
+    }
 });
 
 
