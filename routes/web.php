@@ -23,16 +23,34 @@ Route::get('/debug-db', function () {
             'tables' => array_column($tables, 'name'),
             'connection' => $connection,
             'driver' => config("database.connections.$connection.driver"),
-            'url_start' => substr(config("database.connections.$connection.url"), 0, 15),
+            'url_masked' => substr(config("database.connections.$connection.url"), 0, 20) . '...',
         ];
     } catch (\Throwable $e) {
         return [
             'status' => 'error',
             'message' => $e->getMessage(),
             'class' => get_class($e),
-            'config_default' => config('database.default'),
-            'env_db_connection' => env('DB_CONNECTION'),
         ];
+    }
+});
+
+// Force Migration Route (Temporary for Vercel Setup)
+Route::get('/force-migrate', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return 'Migration successful: ' . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Throwable $e) {
+        return 'Migration failed: ' . $e->getMessage();
+    }
+});
+
+// Force Seed Route (Temporary for Vercel Setup)
+Route::get('/force-seed', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        return 'Seeding successful: ' . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Throwable $e) {
+        return 'Seeding failed: ' . $e->getMessage();
     }
 });
 
