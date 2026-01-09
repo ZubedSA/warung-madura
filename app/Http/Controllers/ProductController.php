@@ -17,6 +17,12 @@ class ProductController extends Controller
     public function index()
     {
         try {
+            // TEST 1: Simple Select
+            $testAll = Category::limit(1)->get();
+
+            // TEST 2: Simple Count
+            $testCount = Category::count();
+
             $categories = Category::withCount('products')
                 ->orderBy('sort_order')
                 ->get();
@@ -31,10 +37,12 @@ class ProductController extends Controller
             return view('penjaga.stock.index', compact('categories', 'stockSummary'));
         } catch (\Throwable $e) {
             dd([
+                'test_all_success' => isset($testAll),
+                'test_count_success' => isset($testCount),
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'trace' => json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10))
             ]);
         }
     }
