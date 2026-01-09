@@ -16,7 +16,8 @@ use App\Http\Controllers\UserController;
 Route::get('/debug-db', function () {
     return [
         'is_vercel_env_set' => isset($_SERVER['VERCEL']),
-        'vercel_url' => $_SERVER['VERCEL_URL'] ?? 'Not set',
+        'server_keys' => array_keys($_SERVER),
+        'env_keys' => array_keys($_ENV ?? []),
         'default_connection' => config('database.default'),
         'env_db_connection' => env('DB_CONNECTION'),
         'config_db_connection' => config('database.default'),
