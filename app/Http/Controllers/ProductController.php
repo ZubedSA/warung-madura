@@ -16,28 +16,18 @@ class ProductController extends Controller
      */
     public function index()
     {
-        try {
-            $categories = Category::withCount('products')
-                ->orderBy('sort_order')
-                ->get();
+        $categories = Category::withCount('products')
+            ->orderBy('sort_order')
+            ->get();
 
-            $stockSummary = [
-                'banyak' => Product::where('stock_status', 'banyak')->count(),
-                'cukup' => Product::where('stock_status', 'cukup')->count(),
-                'sedikit' => Product::where('stock_status', 'sedikit')->count(),
-                'kosong' => Product::where('stock_status', 'kosong')->count(),
-            ];
+        $stockSummary = [
+            'banyak' => Product::where('stock_status', 'banyak')->count(),
+            'cukup' => Product::where('stock_status', 'cukup')->count(),
+            'sedikit' => Product::where('stock_status', 'sedikit')->count(),
+            'kosong' => Product::where('stock_status', 'kosong')->count(),
+        ];
 
-            return view('penjaga.stock.index', compact('categories', 'stockSummary'));
-        } catch (\Throwable $e) {
-            dd([
-                'error' => $e->getMessage(),
-                'class' => get_class($e),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-        }
+        return view('penjaga.stock.index', compact('categories', 'stockSummary'));
     }
 
     /**
