@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     // PENJAGA ROUTES
     // ==========================================
     Route::middleware('role:penjaga')->prefix('penjaga')->name('penjaga.')->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('penjaga.stok.index'); });
         // Stock Management
         Route::get('/stok', [ProductController::class, 'index'])->name('stok.index');
         Route::get('/stok/status/{status}', [ProductController::class, 'byStatus'])->name('stok.status');
@@ -75,6 +77,8 @@ Route::middleware('auth')->group(function () {
     // ADMIN/PEMILIK ROUTES
     // ==========================================
     Route::middleware('role:pemilik')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('admin.laporan.index'); });
         // Dashboard already handled above
 
         // Reports
