@@ -15,11 +15,16 @@ use App\Http\Controllers\UserController;
 // Debug Route
 Route::get('/debug-db', function () {
     return [
+        'is_vercel_env_set' => isset($_SERVER['VERCEL']),
+        'vercel_url' => $_SERVER['VERCEL_URL'] ?? 'Not set',
         'default_connection' => config('database.default'),
-        'libsql_config' => config('database.connections.libsql'),
         'env_db_connection' => env('DB_CONNECTION'),
-        'env_db_url_exists' => !empty(env('DB_URL')),
-        'env_db_token_exists' => !empty(env('DB_AUTH_TOKEN')),
+        'config_db_connection' => config('database.default'),
+        'libsql_config' => [
+            'url_exists' => !empty(config('database.connections.libsql.url')),
+            'auth_exists' => !empty(config('database.connections.libsql.authToken')),
+            'url_value_starts' => substr(config('database.connections.libsql.url'), 0, 10),
+        ],
     ];
 });
 
