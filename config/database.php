@@ -10,22 +10,20 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'sqlite'),
 
     /*
     |--------------------------------------------------------------------------
     | Database Connections
     |--------------------------------------------------------------------------
+    |
     */
 
     'connections' => [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            // 'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'dbname' => 'warung_madura_local',
+            'database' => database_path('database.sqlite'),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,
@@ -35,10 +33,9 @@ return [
 
         'libsql' => [
             'driver' => 'libsql',
-            'url' => env('DB_URL', 'libsql://...'), // Format: libsql://dbname-org.turso.io
-            'authToken' => env('DB_AUTH_TOKEN', ''),
+            'url' => env('DB_URL'),
+            'authToken' => env('DB_AUTH_TOKEN'),
             'database' => env('DB_DATABASE', 'warung_madura'),
-            'dbname' => env('DB_DATABASE', 'warung_madura'),
             'prefix' => '',
         ],
 
