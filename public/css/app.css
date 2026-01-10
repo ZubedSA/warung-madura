@@ -417,8 +417,8 @@ textarea {
         transition: all var(--transition-fast);
         margin-bottom: 0.25rem;
         border-left: 3px solid transparent;
-        white-space: nowrap;
-        /* Prevent wrapping */
+        white-space: nowrap !important;
+        /* Force prevent wrapping */
         overflow: hidden;
         text-overflow: ellipsis;
     }
