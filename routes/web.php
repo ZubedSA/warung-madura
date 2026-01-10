@@ -30,11 +30,20 @@ Route::get('/debug-db', function () {
 
 Route::get('/rescue', function () {
     try {
-        // Clear all caches to ensure hardcoded config is used
+        // Clear all caches
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         \Illuminate\Support\Facades\Artisan::call('view:clear');
         \Illuminate\Support\Facades\Artisan::call('route:clear');
+
+        $connection = \Illuminate\Support\Facades\DB::connection();
+        $class = get_class($connection);
+        $config = config('database.default');
+        $driver = config("database.connections.$config.driver");
+
+        $log = "Connection Class: $class\n";
+        $log .= "Default Config: $config\n";
+        $log .= "Driver: $driver\n\n";
 
         // Force migration and seeding on Turso
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
@@ -43,9 +52,11 @@ Route::get('/rescue', function () {
             '--seed' => true
         ]);
 
-        return '<h1>System Rescued!</h1><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre><br><a href="/">Go to Home</a>';
+        $log .= "Migration Output:\n" . \Illuminate\Support\Facades\Artisan::output();
+
+        return "<h1>System Rescued!</h1><pre>$log</pre><br><a href='/'>Go to Home</a>";
     } catch (\Throwable $e) {
-        return '<h1>Rescue Failed!</h1><p>' . $e->getMessage() . '</p><pre>' . $e->getTraceAsString() . '</pre>';
+        return "<h1>Rescue Failed!</h1><p>" . $e->getMessage() . "</p><pre>" . $e->getTraceAsString() . "</pre>";
     }
 });
 
