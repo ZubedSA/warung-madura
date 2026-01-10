@@ -51,14 +51,11 @@ Route::get('/setup-turso', function () {
         "CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)",
         "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, category_id INTEGER, stock_status TEXT DEFAULT 'cukup', supplier_name TEXT DEFAULT '', supplier_phone TEXT DEFAULT '', created_at TEXT, updated_at TEXT)",
         "CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, user_id INTEGER DEFAULT 0, ip_address TEXT DEFAULT '', user_agent TEXT DEFAULT '', payload TEXT NOT NULL, last_activity INTEGER NOT NULL)",
-        "INSERT OR IGNORE INTO users (id, name, email, phone, role, password, created_at, updated_at) VALUES (1, 'Penjaga', 'penjaga@warung.com', '', 'penjaga', '\$2y\$12\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', datetime('now'), datetime('now'))",
-        "INSERT OR IGNORE INTO users (id, name, email, phone, role, password, created_at, updated_at) VALUES (2, 'Pemilik', 'pemilik@warung.com', '', 'pemilik', '\$2y\$12\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', datetime('now'), datetime('now'))",
-        "INSERT OR IGNORE INTO categories (id, name, created_at, updated_at) VALUES (1, 'Makanan', datetime('now'), datetime('now'))",
-        "INSERT OR IGNORE INTO categories (id, name, created_at, updated_at) VALUES (2, 'Minuman', datetime('now'), datetime('now'))",
-        "INSERT OR IGNORE INTO categories (id, name, created_at, updated_at) VALUES (3, 'Sembako', datetime('now'), datetime('now'))",
-        "INSERT OR IGNORE INTO products (id, name, category_id, stock_status, created_at, updated_at) VALUES (1, 'Indomie Goreng', 1, 'banyak', datetime('now'), datetime('now'))",
-        "INSERT OR IGNORE INTO products (id, name, category_id, stock_status, created_at, updated_at) VALUES (2, 'Aqua 600ml', 2, 'cukup', datetime('now'), datetime('now'))",
-        "INSERT OR IGNORE INTO products (id, name, category_id, stock_status, created_at, updated_at) VALUES (3, 'Beras 5kg', 3, 'sedikit', datetime('now'), datetime('now'))"
+        "CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, order_number TEXT NOT NULL UNIQUE, status TEXT DEFAULT 'draft', notes TEXT DEFAULT '', sent_at TEXT, completed_at TEXT, created_at TEXT, updated_at TEXT)",
+        "CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER NOT NULL, product_id INTEGER NOT NULL, quantity_text TEXT NOT NULL, stock_after_arrival TEXT DEFAULT 'cukup', created_at TEXT, updated_at TEXT)",
+        "CREATE TABLE IF NOT EXISTS incomes (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, date TEXT NOT NULL, amount REAL NOT NULL, notes TEXT DEFAULT '', created_at TEXT, updated_at TEXT)",
+        "CREATE TABLE IF NOT EXISTS expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, date TEXT NOT NULL, amount REAL NOT NULL, category TEXT DEFAULT 'lainnya', notes TEXT DEFAULT '', created_at TEXT, updated_at TEXT)",
+        "CREATE TABLE IF NOT EXISTS audit_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, action TEXT NOT NULL, description TEXT NOT NULL, data TEXT DEFAULT '{}', created_at TEXT)",
     ];
 
     $requests = [];
