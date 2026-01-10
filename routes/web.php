@@ -36,14 +36,15 @@ Route::get('/rescue', function () {
         \Illuminate\Support\Facades\Artisan::call('view:clear');
         \Illuminate\Support\Facades\Artisan::call('route:clear');
 
-        $connection = \Illuminate\Support\Facades\DB::connection();
-        $class = get_class($connection);
-        $config = config('database.default');
-        $driver = config("database.connections.$config.driver");
+        $default = config('database.default');
+        $conn = \Illuminate\Support\Facades\DB::connection($default);
+        $class = get_class($conn);
+        $libsql_config = config('database.connections.libsql');
 
-        $log = "Connection Class: $class\n";
-        $log .= "Default Config: $config\n";
-        $log .= "Driver: $driver\n\n";
+        $diag = "Default Connection: $default\n";
+        $diag .= "Connection Class: $class\n";
+        $diag .= "LibSQL Config URL: " . substr($libsql_config['url'] ?? 'N/A', 0, 20) . "...\n";
+        $diag .= "LibSQL Config Token Set: " . (!empty($libsql_config['authToken']) ? 'Yes' : 'No') . "\n\n";
 
         // Force migration and seeding on Turso
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
@@ -52,9 +53,9 @@ Route::get('/rescue', function () {
             '--seed' => true
         ]);
 
-        $log .= "Migration Output:\n" . \Illuminate\Support\Facades\Artisan::output();
+        $output = \Illuminate\Support\Facades\Artisan::output();
 
-        return "<h1>System Rescued!</h1><pre>$log</pre><br><a href='/'>Go to Home</a>";
+        return "<h1>System Rescued!</h1><pre>$diag\nMigration Output:\n$output</pre><br><a href='/'>Go to Home</a>";
     } catch (\Throwable $e) {
         return "<h1>Rescue Failed!</h1><p>" . $e->getMessage() . "</p><pre>" . $e->getTraceAsString() . "</pre>";
     }
