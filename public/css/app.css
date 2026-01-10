@@ -470,12 +470,13 @@ textarea {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 1rem;
+        padding: 1rem 1.25rem;
         background: var(--bg-card);
         border-bottom: 1px solid var(--border-color);
         position: sticky;
         top: 0;
         z-index: 50;
+        box-shadow: var(--shadow-sm);
     }
 
     /* Sidebar Drawer */
@@ -484,12 +485,16 @@ textarea {
         left: 0;
         top: 0;
         bottom: 0;
-        width: 280px;
+        width: 85vw;
+        /* Almost full width for better readability on small screens */
+        max-width: 320px;
         height: 100vh;
         z-index: 1000;
         transform: translateX(-100%);
         transition: transform var(--transition-normal);
         box-shadow: var(--shadow-xl);
+        background: var(--bg-dark);
+        /* Ensure contrast */
     }
 
     .sidebar.active {
