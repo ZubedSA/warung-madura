@@ -23,6 +23,32 @@
 <body>
     <div class="app-container">
         @auth
+            <!-- Mobile Header (Visible only on mobile) -->
+            <div class="mobile-header">
+                <div class="flex items-center gap-3">
+                    <button id="sidebarToggle"
+                        class="p-2 -ml-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-lg">
+                            🏪</div>
+                        <span class="font-bold text-lg">Warung</span>
+                    </div>
+                </div>
+                <div class="p-1 rounded-full bg-surface border border-white/10">
+                    <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}&background=8B5CF6&color=fff&size=32"
+                        class="w-8 h-8 rounded-full" alt="User">
+                </div>
+            </div>
+
+            <!-- Mobile Sidebar Overlay -->
+            <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
             @if(auth()->user()->isPemilik())
                 @include('layouts.partials.sidebar-admin')
             @else
@@ -71,6 +97,29 @@
     </div>
 
     @stack('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (toggle && sidebar && overlay) {
+                function toggleSidebar() {
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                    document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+                }
+
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+
+                overlay.addEventListener('click', toggleSidebar);
+            }
+        });
+    </script>
 </body>
 
 </html>
