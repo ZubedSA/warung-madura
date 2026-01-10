@@ -1,7 +1,14 @@
 <aside class="sidebar">
-    <div class="sidebar-logo">
-        <div class="app-logo-icon">🏪</div>
-        <span class="app-logo-text">Warung Madura</span>
+    <div class="sidebar-logo header-content">
+        <div class="app-logo">
+            <div class="app-logo-icon">🏪</div>
+            <span class="app-logo-text">Warung Madura</span>
+        </div>
+        <button id="sidebarClose" class="btn btn-ghost btn-icon visible-mobile text-muted hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
     </div>
 
     <nav class="sidebar-nav">

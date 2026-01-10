@@ -376,10 +376,17 @@ textarea {
     .sidebar-logo {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 0.75rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         padding: 0 0.5rem 1.5rem 0.5rem;
         border-bottom: 1px dashed var(--border-color);
+    }
+
+    .sidebar-logo .app-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
     }
 
     .sidebar-nav {
@@ -410,6 +417,10 @@ textarea {
         transition: all var(--transition-fast);
         margin-bottom: 0.25rem;
         border-left: 3px solid transparent;
+        white-space: nowrap;
+        /* Prevent wrapping */
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .sidebar-nav-item:hover {
