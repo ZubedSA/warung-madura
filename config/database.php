@@ -10,7 +10,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'default' => env('DB_CONNECTION', 'libsql'),
+    'default' => 'libsql',
 
     'connections' => [
 
