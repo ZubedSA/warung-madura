@@ -36,11 +36,18 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
-        // Manually register the libsql driver to ensure it's always available
+        // Manually register the libsql driver with HARDCODED config for absolute reliability on Vercel
         DB::extend('libsql', function ($config, $name) {
+            $hardcodedConfig = [
+                'driver' => 'libsql',
+                'url' => 'https://turso-db-create-warung-madura-zubedsa.aws-ap-northeast-1.turso.io',
+                'authToken' => 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3Njc5ODk2MDIsImlkIjoiOTVlNWM3MGUtZTU4YS00MDFjLWI5Y2MtNWM3ZWMxNWZkZTUwIiwicmlkIjoiZjM1NTFhNWEtNjg2OS00MDc1LThhYTAtMjEyYjI5MDBhMDkzIn0.CoBmITRsgBq1jWm6WfFLf3AaEwokwPScM6cNbLZOgwZ7_GuuT7S7Q7r0D95e2oWxe6VrAPC3hsLRM-hsY51sAQ',
+                'database' => 'warung_madura',
+                'prefix' => '',
+            ];
             $connector = new LibSQLConnector();
-            $db = $connector->connect($config);
-            return new LibSQLConnection($db, $config['database'] ?? 'warung_madura', $config['prefix'] ?? '', $config);
+            $db = $connector->connect($hardcodedConfig);
+            return new LibSQLConnection($db, 'warung_madura', '', $hardcodedConfig);
         });
     }
 }

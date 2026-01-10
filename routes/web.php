@@ -30,34 +30,22 @@ Route::get('/debug-db', function () {
 
 Route::get('/rescue', function () {
     try {
-        // Clear all caches
+        // Clear all caches FIRST to reset everything
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         \Illuminate\Support\Facades\Artisan::call('view:clear');
         \Illuminate\Support\Facades\Artisan::call('route:clear');
 
-        $default = config('database.default');
-        $conn = \Illuminate\Support\Facades\DB::connection($default);
-        $class = get_class($conn);
-        $libsql_config = config('database.connections.libsql');
-
-        $diag = "Default Connection: $default\n";
-        $diag .= "Connection Class: $class\n";
-        $diag .= "LibSQL Config URL: " . substr($libsql_config['url'] ?? 'N/A', 0, 20) . "...\n";
-        $diag .= "LibSQL Config Token Set: " . (!empty($libsql_config['authToken']) ? 'Yes' : 'No') . "\n\n";
-
-        // Force migration and seeding on Turso
+        // Force fresh migration and seeding on Turso
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
             '--force' => true,
             '--database' => 'libsql',
             '--seed' => true
         ]);
 
-        $output = \Illuminate\Support\Facades\Artisan::output();
-
-        return "<h1>System Rescued!</h1><pre>$diag\nMigration Output:\n$output</pre><br><a href='/'>Go to Home</a>";
+        return '<h1>WARUNG MADURA SYSTEM RESTORED!</h1><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre><br><a href="/">Go to Login</a>';
     } catch (\Throwable $e) {
-        return "<h1>Rescue Failed!</h1><p>" . $e->getMessage() . "</p><pre>" . $e->getTraceAsString() . "</pre>";
+        return '<h1>Restoration Failed!</h1><p>' . $e->getMessage() . '</p><pre>' . $e->getTraceAsString() . '</pre>';
     }
 });
 
