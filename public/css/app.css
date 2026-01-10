@@ -486,7 +486,7 @@ textarea {
         top: 0;
         bottom: 0;
         width: 85vw;
-        /* Almost full width for better readability on small screens */
+        /* Wider for mobile readability */
         max-width: 320px;
         height: 100vh;
         z-index: 1000;
@@ -494,7 +494,7 @@ textarea {
         transition: transform var(--transition-normal);
         box-shadow: var(--shadow-xl);
         background: var(--bg-dark);
-        /* Ensure contrast */
+        /* Ensure proper contrast */
     }
 
     .sidebar.active {
