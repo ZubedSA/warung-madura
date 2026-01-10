@@ -101,22 +101,53 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const toggle = document.getElementById('sidebarToggle');
+            const closeBtn = document.getElementById('sidebarClose');
             const sidebar = document.querySelector('.sidebar');
             const overlay = document.getElementById('sidebarOverlay');
 
-            if (toggle && sidebar && overlay) {
-                function toggleSidebar() {
-                    sidebar.classList.toggle('active');
-                    overlay.classList.toggle('active');
+            if (sidebar && overlay) {
+                // Function to toggle sidebar
+                const toggleSidebar = (show) => {
+                    if (show === undefined) {
+                        sidebar.classList.toggle('active');
+                        overlay.classList.toggle('active');
+                    } else if (show) {
+                        sidebar.classList.add('active');
+                        overlay.classList.add('active');
+                    } else {
+                        sidebar.classList.remove('active');
+                        if (sidebar.scrollTop) sidebar.scrollTop = 0; // Reset scroll
+                        overlay.classList.remove('active');
+                    }
+
+                    // Prevent body scroll when sidebar is open
                     document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+                };
+
+                if (toggle) {
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        toggleSidebar(true);
+                    });
                 }
 
-                toggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleSidebar();
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        toggleSidebar(false);
+                    });
+                }
+
+                overlay.addEventListener('click', () => {
+                    toggleSidebar(false);
                 });
 
-                overlay.addEventListener('click', toggleSidebar);
+                // Close on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                        toggleSidebar(false);
+                    }
+                });
             }
         });
     </script>
