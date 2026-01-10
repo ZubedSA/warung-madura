@@ -40,6 +40,52 @@ Route::get('/test-turso', function () {
     return "<h1>Raw Turso Test</h1><p>HTTP Code: $httpCode</p><pre>" . htmlspecialchars($response) . "</pre>";
 });
 
+// Create Tables Directly in Turso via HTTP
+Route::get('/setup-turso', function () {
+    $url = "https://turso-db-create-warung-madura-zubedsa.aws-ap-northeast-1.turso.io/v2/pipeline";
+    $token = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3Njc5ODk2MDIsImlkIjoiOTVlNWM3MGUtZTU4YS00MDFjLWI5Y2MtNWM3ZWMxNWZkZTUwIiwicmlkIjoiZjM1NTFhNWEtNjg2OS00MDc1LThhYTAtMjEyYjI5MDBhMDkzIn0.CoBmITRsgBq1jWm6WfFLf3AaEwokwPScM6cNbLZOgwZ7_GuuT7S7Q7r0D95e2oWxe6VrAPC3hsLRM-hsY51sAQ";
+
+    $statements = [
+        "CREATE TABLE IF NOT EXISTS migrations (id INTEGER PRIMARY KEY AUTOINCREMENT, migration TEXT NOT NULL, batch INTEGER NOT NULL)",
+        "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, phone TEXT DEFAULT '', role TEXT DEFAULT 'penjaga', email_verified_at TEXT DEFAULT '2000-01-01 00:00:00', password TEXT NOT NULL, remember_token TEXT DEFAULT '', created_at TEXT, updated_at TEXT)",
+        "CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)",
+        "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, category_id INTEGER, stock_status TEXT DEFAULT 'cukup', supplier_name TEXT DEFAULT '', supplier_phone TEXT DEFAULT '', created_at TEXT, updated_at TEXT)",
+        "CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, user_id INTEGER DEFAULT 0, ip_address TEXT DEFAULT '', user_agent TEXT DEFAULT '', payload TEXT NOT NULL, last_activity INTEGER NOT NULL)",
+        "INSERT OR IGNORE INTO users (id, name, email, phone, role, password, created_at, updated_at) VALUES (1, 'Penjaga', 'penjaga@warung.com', '', 'penjaga', '\$2y\$12\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', datetime('now'), datetime('now'))",
+        "INSERT OR IGNORE INTO users (id, name, email, phone, role, password, created_at, updated_at) VALUES (2, 'Pemilik', 'pemilik@warung.com', '', 'pemilik', '\$2y\$12\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', datetime('now'), datetime('now'))",
+        "INSERT OR IGNORE INTO categories (id, name, created_at, updated_at) VALUES (1, 'Makanan', datetime('now'), datetime('now'))",
+        "INSERT OR IGNORE INTO categories (id, name, created_at, updated_at) VALUES (2, 'Minuman', datetime('now'), datetime('now'))",
+        "INSERT OR IGNORE INTO categories (id, name, created_at, updated_at) VALUES (3, 'Sembako', datetime('now'), datetime('now'))",
+        "INSERT OR IGNORE INTO products (id, name, category_id, stock_status, created_at, updated_at) VALUES (1, 'Indomie Goreng', 1, 'banyak', datetime('now'), datetime('now'))",
+        "INSERT OR IGNORE INTO products (id, name, category_id, stock_status, created_at, updated_at) VALUES (2, 'Aqua 600ml', 2, 'cukup', datetime('now'), datetime('now'))",
+        "INSERT OR IGNORE INTO products (id, name, category_id, stock_status, created_at, updated_at) VALUES (3, 'Beras 5kg', 3, 'sedikit', datetime('now'), datetime('now'))"
+    ];
+
+    $requests = [];
+    foreach ($statements as $sql) {
+        $requests[] = ["type" => "execute", "stmt" => ["sql" => $sql]];
+    }
+    $requests[] = ["type" => "close"];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["requests" => $requests]));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200) {
+        return "<h1>TURSO DATABASE SETUP COMPLETE!</h1><p>All tables created and seeded.</p><a href='/'>Go to Login</a>";
+    }
+    return "<h1>Setup Failed</h1><p>HTTP Code: $httpCode</p><pre>" . htmlspecialchars($response) . "</pre>";
+});
+
 Route::get('/rescue', function () {
     try {
         // Clear all caches FIRST to reset everything
