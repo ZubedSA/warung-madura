@@ -346,7 +346,7 @@ textarea {
         width: 260px;
         background: var(--bg-card);
         border-right: 1px solid var(--border-color);
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
         display: flex;
         flex-direction: column;
         position: sticky;
@@ -355,13 +355,31 @@ textarea {
         overflow-y: auto;
     }
 
+    /* Custom Scrollbar for Sidebar */
+    .sidebar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+    }
+
     .sidebar-logo {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--border-color);
+        padding: 0 0.5rem 1.5rem 0.5rem;
+        border-bottom: 1px dashed var(--border-color);
     }
 
     .sidebar-nav {
@@ -385,25 +403,35 @@ textarea {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        padding: 0.75rem 1rem;
+        padding: 0.625rem 1rem;
         border-radius: var(--radius-md);
         color: var(--text-secondary);
+        font-weight: 500;
         transition: all var(--transition-fast);
         margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
     }
 
-    .sidebar-nav-item:hover,
+    .sidebar-nav-item:hover {
+        background: var(--bg-card-hover);
+        color: var(--text-primary);
+    }
+
     .sidebar-nav-item.active {
-        background: rgba(139, 92, 246, 0.1);
+        background: rgba(139, 92, 246, 0.08);
+        /* Minimalist fill */
         color: var(--primary);
-    }
-
-    .sidebar-nav-item.active {
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+        border-left-color: var(--primary);
+        font-weight: 600;
     }
 
     .sidebar-nav-icon {
         font-size: 1.25rem;
+        opacity: 0.8;
+    }
+
+    .sidebar-nav-item.active .sidebar-nav-icon {
+        opacity: 1;
     }
 
     .sidebar-user {
