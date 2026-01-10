@@ -86,6 +86,45 @@ Route::get('/setup-turso', function () {
     return "<h1>Setup Failed</h1><p>HTTP Code: $httpCode</p><pre>" . htmlspecialchars($response) . "</pre>";
 });
 
+// Fix user passwords with correct bcrypt hash
+Route::get('/fix-users', function () {
+    $url = "https://turso-db-create-warung-madura-zubedsa.aws-ap-northeast-1.turso.io/v2/pipeline";
+    $token = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3Njc5ODk2MDIsImlkIjoiOTVlNWM3MGUtZTU4YS00MDFjLWI5Y2MtNWM3ZWMxNWZkZTUwIiwicmlkIjoiZjM1NTFhNWEtNjg2OS00MDc1LThhYTAtMjEyYjI5MDBhMDkzIn0.CoBmITRsgBq1jWm6WfFLf3AaEwokwPScM6cNbLZOgwZ7_GuuT7S7Q7r0D95e2oWxe6VrAPC3hsLRM-hsY51sAQ";
+
+    // Generate correct bcrypt hash for 'password'
+    $hash = password_hash('password', PASSWORD_BCRYPT);
+
+    $statements = [
+        "DELETE FROM users",
+        "INSERT INTO users (id, name, email, phone, role, password, created_at, updated_at) VALUES (1, 'Penjaga', 'penjaga@warung.com', '', 'penjaga', '$hash', datetime('now'), datetime('now'))",
+        "INSERT INTO users (id, name, email, phone, role, password, created_at, updated_at) VALUES (2, 'Pemilik', 'pemilik@warung.com', '', 'pemilik', '$hash', datetime('now'), datetime('now'))"
+    ];
+
+    $requests = [];
+    foreach ($statements as $sql) {
+        $requests[] = ["type" => "execute", "stmt" => ["sql" => $sql]];
+    }
+    $requests[] = ["type" => "close"];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["requests" => $requests]));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200) {
+        return "<h1>USERS FIXED!</h1><p>Password: password</p><a href='/login'>Go to Login</a>";
+    }
+    return "<h1>Fix Failed</h1><p>HTTP Code: $httpCode</p><pre>" . htmlspecialchars($response) . "</pre>";
+});
+
 Route::get('/rescue', function () {
     try {
         // Clear all caches FIRST to reset everything
